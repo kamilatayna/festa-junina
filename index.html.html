@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Votação — Festa Junina Copa 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --green-dark: #085041;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --amber-dark: #633806;
+    --bg: #F7F3EC;
+    --card: #fff;
+    --text: #1a1a1a;
+    --muted: #6b6b6b;
+    --border: rgba(0,0,0,0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .header p {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .flags {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    margin-bottom: 12px;
+  }
+
+  .question {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .vote-btn {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+    transition: all 0.18s;
+    text-align: left;
+  }
+
+  .vote-btn:hover { transform: translateY(-2px); border-color: #ccc; }
+  .vote-btn:active { transform: scale(0.98); }
+
+  .vote-btn.selected-green {
+    border-color: var(--green);
+    background: var(--green-light);
+  }
+
+  .vote-btn.selected-amber {
+    border-color: var(--amber);
+    background: var(--amber-light);
+  }
+
+  .btn-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .btn-label { font-weight: 600; font-size: 14px; color: var(--text); }
+  .btn-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .submit-btn {
+    width: 100%;
+    padding: 0.9rem;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+
+  .submit-btn:hover { opacity: 0.88; }
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .error {
+    font-size: 12px;
+    color: #c0392b;
+    text-align: center;
+    margin-top: 8px;
+    display: none;
+  }
+
+  /* Placar */
+  .score-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .score-row { margin-bottom: 14px; }
+  .score-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+
+  .score-name { font-size: 13px; font-weight: 600; }
+  .score-count { font-size: 13px; }
+
+  .bar-track {
+    height: 10px;
+    background: #eee;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.5s ease;
+  }
+
+  .total {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  /* Tela de obrigado */
+  .thanks {
+    text-align: center;
+    padding: 1rem 0;
+    display: none;
+  }
+
+  .thanks-icon {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.6rem;
+  }
+
+  .thanks h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .thanks p { font-size: 14px; color: var(--muted); }
+
+  /* QR code area */
+  .qr-card {
+    background: var(--card);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .qr-card p {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 12px;
+  }
+
+  #qrcode { display: inline-block; }
+
+  .url-pill {
+    margin-top: 12px;
+    display: inline-block;
+    background: var(--bg);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    word-break: break-all;
+  }
+
+  /* Tela de admin */
+  .admin-btn {
+    width: 100%;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    margin-top: 4px;
+    transition: background 0.15s;
+  }
+
+  .admin-btn:hover { background: #f0ece4; }
+
+  .voters-list { margin-top: 10px; }
+  .voter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0ece4;
+    font-size: 13px;
+  }
+
+  .voter-badge {
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .reset-btn {
+    width: 100%;
+    background: none;
+    border: 1px solid #fcc;
+    border-radius: 10px;
+    padding: 0.6rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #c0392b;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.15s;
+  }
+
+  .reset-btn:hover { background: #fff0f0; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="flags">⚽🎪</div>
+    <h1>Festa Junina Copa 2026</h1>
+    <p>vote no time mais caprichado</p>
+  </div>
+
+  <!-- TELA DE VOTAÇÃO -->
+  <div id="screen-vote" class="screen active">
+    <div class="card">
+      <p class="question">Qual time foi o mais caprichado?</p>
+
+      <button class="vote-btn" id="btn-green" onclick="select('green')">
+        <div class="btn-icon" style="background:var(--green-light)">🏆</div>
+        <div>
+          <div class="btn-label" style="color:var(--green-dark)">Time Verde</div>
+          <div class="btn-sub">Brindes & Brincadeiras</div>
+        </div>
+      </button>
+
+      <button class="vote-btn" id="btn-amber" onclick="select('amber')">
+        <div class="btn-icon" style="background:var(--amber-light)">⭐</div>
+        <div>
+          <div class="btn-label" style="color:var(--amber-dark)">Time Amarelo</div>
+          <div class="btn-sub">Decoração, Organização & Gastronomia</div>
+        </div>
+      </button>
+
+      <button class="submit-btn" id="submit-btn" onclick="submitVote()">Votar</button>
+      <p class="error" id="error-msg">Escolha um time para votar!</p>
+    </div>
+
+    <div class="card">
+      <p class="score-label">placar parcial</p>
+      <div id="scoreboard-vote"></div>
+    </div>
+
+    <button class="admin-btn" onclick="showAdmin()">ver placar completo + lista de votos</button>
+  </div>
+
+  <!-- TELA DE OBRIGADO -->
+  <div id="screen-thanks" class="screen">
+    <div class="card">
+      <div class="thanks" style="display:block">
+        <div class="thanks-icon">✅</div>
+        <h2>Voto registrado!</h2>
+        <p>Obrigado por participar</p>
+      </div>
+    </div>
+    <div class="card">
+      <p class="score-label">placar atualizado</p>
+      <div id="scoreboard-thanks"></div>
+    </div>
+    <button class="admin-btn" onclick="backToVote()">voltar</button>
+  </div>
+
+  <!-- TELA DE ADMIN -->
+  <div id="screen-admin" class="screen">
+    <div class="card">
+      <p class="score-label">placar completo</p>
+      <div id="winner-area" style="margin-bottom:14px"></div>
+      <div id="scoreboard-admin"></div>
+    </div>
+    <div class="card">
+      <p class="score-label">quem votou</p>
+      <div id="voters-list" class="voters-list"></div>
+    </div>
+    <button class="admin-btn" onclick="backToVote()">voltar para votação</button>
+    <button class="reset-btn" onclick="resetVotes()">zerar todos os votos</button>
+  </div>
+
+  <!-- QR CODE (só aparece quando há URL real) -->
+  <div class="qr-card" id="qr-area" style="display:none">
+    <p>escaneie para votar</p>
+    <div id="qrcode"></div>
+    <div class="url-pill" id="url-display"></div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const STORAGE_KEY = 'festa-junina-2026';
+let selected = null;
+let qrGenerated = false;
+
+function getData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : { green: 0, amber: 0, voters: [] };
+  } catch(e) { return { green: 0, amber: 0, voters: [] }; }
+}
+
+function saveData(d) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+}
+
+function select(team) {
+  selected = team;
+  document.getElementById('btn-green').className = 'vote-btn' + (team === 'green' ? ' selected-green' : '');
+  document.getElementById('btn-amber').className = 'vote-btn' + (team === 'amber' ? ' selected-amber' : '');
+  document.getElementById('error-msg').style.display = 'none';
+}
+
+function submitVote() {
+  if (!selected) {
+    document.getElementById('error-msg').style.display = 'block';
+    return;
+  }
+  const d = getData();
+  d[selected]++;
+  d.voters.push({ team: selected, ts: Date.now() });
+  saveData(d);
+  renderScore('scoreboard-thanks', d);
+  showScreen('screen-thanks');
+}
+
+function renderScore(containerId, d) {
+  const total = d.green + d.amber;
+  const pG = total ? Math.round(d.green / total * 100) : 0;
+  const pA = total ? Math.round(d.amber / total * 100) : 0;
+  document.getElementById(containerId).innerHTML = `
+    <div class="score-row">
+      <div class="score-row-header">
+        <span class="score-name" style="color:var(--green-dark)">Time Verde</span>
+        <span class="score-count" style="color:var(--green)">${d.green} voto${d.green!==1?'s':''} · ${pG}%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pG}%;background:var(--green)"></div></div>
+    </div>
+    <div class="score-row">
+      <div class="score-row-header">
+        <span class="score-name" style="color:var(--amber-dark)">Time Amarelo</span>
+        <span class="score-count" style="color:var(--amber)">${d.amber} voto${d.amber!==1?'s':''} · ${pA}%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pA}%;background:var(--amber)"></div></div>
+    </div>
+    <p class="total">${total} voto${total!==1?'s':''} no total</p>
+  `;
+}
+
+function renderAdmin(d) {
+  renderScore('scoreboard-admin', d);
+  const total = d.green + d.amber;
+  const wa = document.getElementById('winner-area');
+  if (total > 0) {
+    const tie = d.green === d.amber;
+    const gWon = d.green > d.amber;
+    wa.innerHTML = `<div style="text-align:center;padding:10px;border-radius:10px;background:${tie?'#f0ece4':gWon?'var(--green-light)':'var(--amber-light)'}">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:${tie?'#333':gWon?'var(--green-dark)':'var(--amber-dark)'}">
+        ${tie ? 'Empate!' : (gWon ? 'Time Verde Venceu!' : 'Time Amarelo Venceu!')}
+      </div>
+    </div>`;
+  } else {
+    wa.innerHTML = '';
+  }
+
+  const vl = document.getElementById('voters-list');
+  if (d.voters.length === 0) {
+    vl.innerHTML = '<p style="font-size:13px;color:var(--muted)">Nenhum voto ainda.</p>';
+  } else {
+    vl.innerHTML = d.voters.map((v, i) => `
+      <div class="voter-row">
+        <span style="color:var(--muted)">#${i+1}</span>
+        <span class="voter-badge" style="background:${v.team==='green'?'var(--green-light)':'var(--amber-light)'};color:${v.team==='green'?'var(--green-dark)':'var(--amber-dark)'}">
+          ${v.team === 'green' ? 'Time Verde' : 'Time Amarelo'}
+        </span>
+      </div>`).join('');
+  }
+}
+
+function showAdmin() {
+  renderAdmin(getData());
+  showScreen('screen-admin');
+}
+
+function backToVote() {
+  selected = null;
+  document.getElementById('btn-green').className = 'vote-btn';
+  document.getElementById('btn-amber').className = 'vote-btn';
+  renderScore('scoreboard-vote', getData());
+  showScreen('screen-vote');
+}
+
+function resetVotes() {
+  if (!confirm('Zerar todos os votos?')) return;
+  saveData({ green: 0, amber: 0, voters: [] });
+  renderAdmin(getData());
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function generateQR() {
+  const url = window.location.href;
+  const isLocal = url.startsWith('file://') || url.includes('localhost');
+  if (isLocal || qrGenerated) return;
+  qrGenerated = true;
+  document.getElementById('qr-area').style.display = 'block';
+  document.getElementById('url-display').textContent = url;
+  new QRCode(document.getElementById('qrcode'), {
+    text: url,
+    width: 160,
+    height: 160,
+    colorDark: '#1a1a1a',
+    colorLight: '#ffffff',
+  });
+}
+
+renderScore('scoreboard-vote', getData());
+generateQR();
+</script>
+</body>
+</html>

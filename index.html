@@ -103,15 +103,15 @@
 <div class="gol-flash" id="gol-flash">
   <div class="gol-flash-title">⚽ Seus gols nessa festança! 🎉</div>
   <div class="gol-teams">
-    <div class="gol-team-box"><div class="gol-team-name">🟣 Time Roxo</div><div class="gol-team-num" id="flash-purple">0</div><div class="gol-team-label">gols</div></div>
-    <div class="gol-team-box"><div class="gol-team-name">🟢 Time Verde</div><div class="gol-team-num" id="flash-green">0</div><div class="gol-team-label">gols</div></div>
+    <div class="gol-team-box"><div class="gol-team-name">🟣 CHAMPIAEON</div><div class="gol-team-num" id="flash-purple">0</div><div class="gol-team-label">gols</div></div>
+    <div class="gol-team-box"><div class="gol-team-name">🟢 CUMADRES DO HEXA</div><div class="gol-team-num" id="flash-green">0</div><div class="gol-team-label">gols</div></div>
   </div>
   <div class="gol-sub">Obrigado, sô! Suas notas entraram no placar! 🎪</div>
 </div>
 <div class="placar-fixo">
-  <div class="placar-time"><div class="placar-time-name">⚽ Time Roxo</div><div class="placar-gols" id="gols-purple">0</div><div class="placar-label">gols</div></div>
+  <div class="placar-time"><div class="placar-time-name">⚽ CHAMPIAEON</div><div class="placar-gols" id="gols-purple">0</div><div class="placar-label">gols</div></div>
   <div class="placar-center"><div class="placar-vs">VS</div><div class="placar-total" id="placar-total-top">0 avaliações</div></div>
-  <div class="placar-time"><div class="placar-time-name">⚽ Time Verde</div><div class="placar-gols" id="gols-green">0</div><div class="placar-label">gols</div></div>
+  <div class="placar-time"><div class="placar-time-name">⚽ CUMADRES DO HEXA</div><div class="placar-gols" id="gols-green">0</div><div class="placar-label">gols</div></div>
 </div>
 <div class="header">
   <div class="header-bg"></div>
@@ -145,8 +145,8 @@
   </div>
   <div id="screen-admin" class="screen">
     <div class="card"><p class="score-section-title">⚽ placar final</p><div id="winner-area" style="margin-bottom:16px"></div><div id="placar-full"></div></div>
-    <div class="card"><p class="score-section-title">🟣 notas por tópico — time roxo</p><div id="breakdown-purple"></div></div>
-    <div class="card"><p class="score-section-title">🟢 notas por tópico — time verde</p><div id="breakdown-green"></div></div>
+    <div class="card"><p class="score-section-title">🟣 notas por tópico — CHAMPIAEON</p><div id="breakdown-purple"></div></div>
+    <div class="card"><p class="score-section-title">🟢 notas por tópico — CUMADRES DO HEXA</p><div id="breakdown-green"></div></div>
     <p id="total-label" style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:12px"></p>
     <button class="secondary-btn" onclick="backToVote()">voltar</button>
     <button class="reset-btn" onclick="resetVotes()">zerar placar</button>
@@ -174,13 +174,12 @@ const db = getFirestore(app);
 const VOTE_DOC = doc(db, "votos", "placar");
 
 const TOPICS = [
-  {id:0,team:'purple',emoji:'🎨',label:'Criatividade na decoração do escritório'},
-  {id:1,team:'purple',emoji:'🍽️',label:'Escolha dos pratos e composição da mesa temática'},
-  {id:2,team:'purple',emoji:'📸',label:'Espaços instagramáveis'},
-  {id:3,team:'purple',emoji:'🪧',label:'Criatividade nas plaquinhas para fotos'},
-  {id:4,team:'green', emoji:'🎁',label:'Criatividade nos brindes e prendas'},
-  {id:5,team:'green', emoji:'🎮',label:'Criatividade na Brincadeira 1'},
-  {id:6,team:'green', emoji:'🎯',label:'Criatividade na Brincadeira 2'},
+  {id:0,team:'green', emoji:'🌽',label:'Os sabores da coparraiá (comidas e quitutes típicos)'},
+  {id:1,team:'green', emoji:'🎪',label:'Decoração do escritório (ambientação com tema arraiá e copa do mundo)'},
+  {id:2,team:'green', emoji:'🤳🏻',label:'Cenário e materiais para as fotos (espaços e materiais impressos)'},
+  {id:3,team:'purple',emoji:'💰',label:'Brincadeira valendo Pix'},
+  {id:4,team:'purple',emoji:'🎉',label:'Bingolão da CHAMPIAEON'},
+  {id:5,team:'purple',emoji:'🏆',label:'Prêmio do Binco — Kit Hexa'},
 ];
 const SHUFFLED = TOPICS.slice().sort(() => Math.random() - 0.5);
 let ratings = {}, qrDone = false;
@@ -260,12 +259,12 @@ function renderAdmin(data) {
     const tie=pTotal===gTotal,pWon=pTotal>gTotal;
     const bg2=tie?'#f5f5f5':(pWon?'var(--purple-light)':'var(--green-light)');
     const color=tie?'#333':(pWon?'var(--purple-dark)':'var(--green-dark)');
-    const label=tie?'Empatado no apito final! 🤝':(pWon?'Time Roxo venceu! 🏆':'Time Verde venceu! 🏆');
+    const label=tie?'Empatado no apito final! 🤝':(pWon?'CHAMPIAEON venceu! 🏆':'CUMADRES DO HEXA venceu! 🏆');
     wa.innerHTML='<div class="winner-banner" style="background:'+bg2+'"><div class="winner-title" style="color:'+color+'">'+label+'</div></div>';
   } else { wa.innerHTML=''; }
   document.getElementById('placar-full').innerHTML=
-    '<div class="placar-row"><div class="placar-row-header"><span class="placar-row-name" style="color:var(--purple-dark)">⚽ Time Roxo</span><span class="placar-row-pts" style="color:var(--purple)">'+pTotal+' gols · '+pPct+'%</span></div><div class="bar-track"><div class="bar-fill" style="width:'+pPct+'%;background:var(--purple)"></div></div></div>'+
-    '<div class="placar-row"><div class="placar-row-header"><span class="placar-row-name" style="color:var(--green-dark)">⚽ Time Verde</span><span class="placar-row-pts" style="color:var(--green)">'+gTotal+' gols · '+gPct+'%</span></div><div class="bar-track"><div class="bar-fill" style="width:'+gPct+'%;background:var(--green)"></div></div></div>';
+    '<div class="placar-row"><div class="placar-row-header"><span class="placar-row-name" style="color:var(--purple-dark)">⚽ CHAMPIAEON</span><span class="placar-row-pts" style="color:var(--purple)">'+pTotal+' gols · '+pPct+'%</span></div><div class="bar-track"><div class="bar-fill" style="width:'+pPct+'%;background:var(--purple)"></div></div></div>'+
+    '<div class="placar-row"><div class="placar-row-header"><span class="placar-row-name" style="color:var(--green-dark)">⚽ CUMADRES DO HEXA</span><span class="placar-row-pts" style="color:var(--green)">'+gTotal+' gols · '+gPct+'%</span></div><div class="bar-track"><div class="bar-fill" style="width:'+gPct+'%;background:var(--green)"></div></div></div>';
   document.getElementById('breakdown-purple').innerHTML=pT.map((tp,i)=>'<div class="topic-breakdown-row"><span class="topic-breakdown-name">'+tp.emoji+' '+tp.label+'</span><span class="topic-breakdown-avg" style="color:var(--purple)">média '+(pArr[i]/count).toFixed(1)+'</span></div>').join('');
   document.getElementById('breakdown-green').innerHTML=gT.map((tp,i)=>'<div class="topic-breakdown-row"><span class="topic-breakdown-name">'+tp.emoji+' '+tp.label+'</span><span class="topic-breakdown-avg" style="color:var(--green)">média '+(gArr[i]/count).toFixed(1)+'</span></div>').join('');
   document.getElementById('total-label').textContent=count+' pessoa'+(count!==1?'s':'')+' avaliaram a festa.';
